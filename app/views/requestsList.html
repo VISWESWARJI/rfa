@@ -1,0 +1,58 @@
+<!-- Generic table to view all requests starts -->
+<div class="row">
+	<div class="col-md-12 panel_top">
+		<button ng-if="user.isHRAdmin || user.teamName =='ICT'" ng-click="clearfields();" class="btn btn-fab btn-raised btn-material-red addRequest shadow-z-4" data-toggle="modal" data-target="#addRequest" ng-cloak><i class="mdi-content-add"></i></button>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h2 class="panel-title">Request For Approval <i class="mdi-notification-sync"></i> </h2>
+			</div>
+			<div class="panel-body ">
+				<div class="search ">
+
+					<input type="text" class="form-control" name="search" placeholder="Search Anything..." ng-model="search">
+
+				</div>
+				<div class="table-responsive" id="no-more-tables">
+					<table class="col-md-12 table-bordered table-striped table-condensed cf ">
+						<thead class="cf">
+							<tr>
+								<th>Request Id <span class="glyphicon sort-icon" ng-show="sortKey=='id'" ng-class="{'mdi-hardware-keyboard-arrow-up':reverse,'mdi-hardware-keyboard-arrow-down':!reverse}"></span></th>
+								<th>Department</th>
+								<th>Team</th>
+								<th>Description</th>
+								<th>Status <span class="glyphicon sort-icon" ng-show="sortKey=='status'" ng-class="{'mdi-hardware-keyboard-arrow-up':reverse,'mdi-hardware-keyboard-arrow-down':!reverse}"></span></th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr dir-paginate="ticketDetail in ticketDetails |itemsPerPage:7 |filter:search">
+								<td data-title="Request Id"><a href="#" ng-click="getTicketFullDetails(ticketDetail)" data-toggle="modal" data-target="#fullDetails" data-tooltip="View Full Details">{{ticketDetail.id}}</a></td>
+								<td data-title="Department">{{ticketDetail.department}}</td>
+								<td data-title="Department">{{ticketDetail.team_name}}</td>
+								<td data-title="Description">{{ticketDetail.description}}</td>
+								<td data-title="Status">{{ticketDetail.status}}</td>
+								<td data-title="Actions" ng-cloak>
+									<button ng-if="user.isTeamAdmin" ng-cloak class="btn btn-default" ng-click="getManagers(ticketDetail.id);" data-toggle="modal" data-target="#commentBlk" ng-disabled="ticketDetail.statusDetails !== null" data-tooltip="Approve"><i class="mdi-navigation-check" ></i></button>
+									<button ng-if="user.isTeamAdmin" ng-cloak class="btn btn-default" data-toggle="modal" data-target="#commentBlk" ng-click="isFalse(ticketDetail.id);" ng-disabled="ticketDetail.statusDetails !== null && ticketDetail.statusDetails.rfa_approvals_status === 'REJECTED'" data-tooltip="Reject"><i class="mdi-navigation-close"></i> </button>
+									<button ng-if="user.isHRAdmin" ng-cloak class="btn btn-default"  data-toggle="modal" data-target="#addRequest" ng-click="editRequest(ticketDetail);" data-tooltip="Edit"><i class="mdi-editor-mode-edit"></i></button>
+									<button ng-if="user.isHRAdmin" ng-cloak class="btn btn-default" ng-click="closeRequest(ticketDetail.id);" ng-disabled="ticketDetail.status === 'CLOSED'" data-tooltip="Close Request"><i class="mdi-content-backspace"></i></button>
+									<a href="http://192.168.25.221/development_b/protected/uploads/RFA/{{ticketDetail.invoice}}" target="_blank" class="btn btn-default" ng-click="viewInvoice(ticketDetail.id);" data-tooltip="View Invoice"><i class="mdi-action-wallet-membership" ></i> </a>
+									<button ng-if="user.isAccountsAdmin" ng-cloak class="btn btn-default" ng-click="setRequestId(ticketDetail.id);"  data-toggle="modal" data-target="#uploadInvoice" data-tooltip="Upload Invoice"><i class="mdi-action-backup"></i></button>
+									<a href="http://192.168.25.221/development_b/protected/uploads/RFA/{{ticketDetail.quotation}}" class="btn btn-default" target="_blank" data-tooltip="View Quotation"><i class="mdi-image-loupe"></i> </a>
+									<a href="#" class="btn btn-default" data-toggle="modal" data-target="#status" ng-click="showStatus(ticketDetail.id);" ng-disabled="ticketDetail.status === 'CREATED'" data-tooltip="Show Status"><i class="mdi-action-info-outline"></i> </a>
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<dir-pagination-controls max-size="10" direction-links="true" boundary-links="true"></dir-pagination-controls>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Generic table to view all requests ends -->
